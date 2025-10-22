@@ -83,10 +83,13 @@ class SFZeroAudioProcessor  : public juce::AudioProcessor {
 
 		void	loadSound(juce::Thread* thread = NULL);
 
+#if JUCE_DEBUG
+		std::unique_ptr<juce::FileLogger> logger;
+#endif
+
 	private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SFZeroAudioProcessor);
 	};
 
 
 #endif  // __PLUGINPROCESSOR_H_7DD34D53__
-

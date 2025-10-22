@@ -1,6 +1,6 @@
 #ifndef SF2Sound_h
 #define SF2Sound_h
-
+#include <functional> // for std::hash
 #include "SFZSound.h"
 
 
@@ -38,9 +38,21 @@ public:
 	SFZSample* sampleFor (unsigned long sampleRate);
 	void setSamplesBuffer (juce::AudioSampleBuffer* buffer);
 
+    struct Int64Hash
+    {
+        int generateHash(int64_t key, int upperLimit) const noexcept
+        {
+            size_t h = std::hash<uint64_t>{}(static_cast<uint64_t>(key));
+            return static_cast<int>(h % static_cast<size_t>(upperLimit));
+        }
+    };
+
+
 protected:
 	juce::OwnedArray<Preset>	presets;
-	juce::HashMap<int64_t, SFZSample*>	samplesByRate;
+	juce::HashMap<int64_t, SFZSample*, Int64Hash> samplesByRate;
+
+
 	int selectedPreset;
 };
 

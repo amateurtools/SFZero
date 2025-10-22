@@ -157,14 +157,18 @@ void SFZeroEditor::timerCallback()
 
 void SFZeroEditor::chooseFile()
 {
-	juce::FileChooser chooser(
-		"Select an SFZ file...",
-		juce::File(),
-		"*.sfz;*.SFZ;*.sf2;*.SF2");
-	if (chooser.browseForFileToOpen()) {
-		juce::File sfzFile(chooser.getResult());
-		setFile(sfzFile);
-		}
+	auto chooser = std::make_shared<juce::FileChooser>("Select an SFZ file...", juce::File(), "*.sfz;*.SFZ;*.sf2;*.SF2");
+
+	int flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
+
+	chooser->launchAsync(flags, [this, chooser](const juce::FileChooser& fc)
+	{
+		auto sfzFile = fc.getResult();
+		if (sfzFile.exists())
+		    setFile(sfzFile);
+	});
+
+
 }
 
 

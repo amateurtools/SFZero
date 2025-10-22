@@ -8,9 +8,9 @@ SFZeroAudioProcessor::SFZeroAudioProcessor()
 	: loadProgress(0.0), loadThread(this)
 {
 #if JUCE_DEBUG
-	setupLogging(
-		 juce::FileLogger::createDefaultAppLogger(
-			"SFZero", "SFZero.log", "SFZero started"));
+	logger.reset(juce::FileLogger::createDefaultAppLogger(
+		"SFZero", "SFZero.log", "SFZero started"));
+	setupLogging(logger.get());
 #endif
 
 	formatManager.registerFormat(new juce::WavAudioFormat(), false);
@@ -22,6 +22,21 @@ SFZeroAudioProcessor::SFZeroAudioProcessor()
 
 SFZeroAudioProcessor::~SFZeroAudioProcessor()
 {
+	// Stop the load thread before destruction
+	loadThread.stopThread(2000);
+	
+	// Clear synth sounds before cleanup
+	synth.clearSounds();
+	synth.clearVoices();
+	
+#if JUCE_DEBUG
+	// Critical: Shutdown logging system before destroying logger
+	shutdownLogging();
+	
+	// Clear the current logger before destroying it
+	juce::Logger::setCurrentLogger(nullptr);
+	logger.reset();
+#endif
 }
 
 const juce::String SFZeroAudioProcessor::getName() const
@@ -289,4 +304,3 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new SFZeroAudioProcessor();
 }
-

@@ -123,6 +123,16 @@ void SFZero::setupLogging (juce::Logger* logger)
 }
 
 
+void SFZero::shutdownLogging()
+{
+	if (fifo != NULL)
+	{
+		delete fifo;
+		fifo = NULL;
+	}
+}
+
+
 void SFZero::fifoLogMessage(const juce::String& message)
 {
 	if (fifo)
@@ -151,5 +161,3 @@ void SFZero::dbgprintf(const char* msg, ...)
 
 
 #endif 	// JUCE_DEBUG
-
-
