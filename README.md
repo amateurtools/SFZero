@@ -16,3 +16,6 @@ and I tried to compile it and it wouldn't because of a hash generator error.
 I 'fixed' that and also the file browser was using a deprecated method
 which I changed to a more up to date method. It compiles for me and works
 so I thought I'd share it.
+
+there's a bunch of issues to work out, i'm keeping up with it in case i
+want to expand on it later. 
