@@ -154,7 +154,7 @@ void SFZeroEditor::timerCallback()
 		showVoiceInfo();
 }
 
-
+/*
 void SFZeroEditor::chooseFile()
 {
 	auto chooser = std::make_shared<juce::FileChooser>("Select an SFZ file...", juce::File(), "*.sfz;*.SFZ;*.sf2;*.SF2");
@@ -167,10 +167,24 @@ void SFZeroEditor::chooseFile()
 		if (sfzFile.exists())
 		    setFile(sfzFile);
 	});
-
-
 }
+*/
 
+void SFZeroEditor::chooseFile()
+{
+	// Use synchronous file chooser instead of async
+	juce::FileChooser chooser(
+		"Select an SFZ file...", 
+		juce::File(), 
+		"*.sfz;*.SFZ;*.sf2;*.SF2");
+
+	if (chooser.browseForFileToOpen())
+	{
+		auto sfzFile = chooser.getResult();
+		if (sfzFile.exists())
+			setFile(sfzFile);
+	}
+}
 
 void SFZeroEditor::setFile(const juce::File& newFile)
 {

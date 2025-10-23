@@ -177,6 +177,10 @@ void SFZeroAudioProcessor::releaseResources()
 void SFZeroAudioProcessor::processBlock(juce::AudioSampleBuffer& buffer, juce::MidiBuffer& midiMessages)
 {
 	int numSamples = buffer.getNumSamples();
+	
+	// Clear the buffer first - this is an instrument, not an effect
+	buffer.clear();
+	
 	keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
 	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 }
